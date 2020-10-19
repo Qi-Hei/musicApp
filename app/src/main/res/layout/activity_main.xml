@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPink"
+        tools:context=".MainActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/menu_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:titleTextColor="@android:color/black">
+
+            <ImageView
+                android:id="@+id/menu_icon"
+                android:layout_width="55dp"
+                android:layout_height="45dp"
+                android:background="@android:color/white"
+                android:src="@mipmap/menu_icon_1" />
+
+            <SearchView
+                android:id="@+id/music_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginStart="8dp"
+                android:queryHint="Search" />
+
+        </androidx.appcompat.widget.Toolbar>
+    </RelativeLayout>
+
+
+
+</androidx.drawerlayout.widget.DrawerLayout>
