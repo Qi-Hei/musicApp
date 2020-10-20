@@ -39,8 +39,20 @@
             android:queryHint="Search"/>
 
     </androidx.appcompat.widget.Toolbar>
+    <ImageView
+        android:id="@+id/white_margin"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:background="#FFF"
+        android:layout_below="@id/menu_bar"/>
 
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/music_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/music_bottom"
+        android:layout_below="@+id/white_margin">
+    </androidx.recyclerview.widget.RecyclerView>
 
     <RelativeLayout
         android:id="@+id/music_bottom"
