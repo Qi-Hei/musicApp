@@ -8,74 +8,33 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:fitsSystemWindows="true"
+    android:background="@color/colorPink"
     tools:openDrawer="start"
     >
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/music_bottom"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPink"
-        tools:context=".MainActivity">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/menu_bar"
+        android:layout_height="80dp"
+        android:background="#55EEEEEE"
+        android:layout_alignParentBottom="true">
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPink1"
-            app:titleTextColor="@android:color/black">
-
-            <ImageView
-                android:id="@+id/menu_icon"
-                android:layout_width="55dp"
-                android:layout_height="45dp"
-                android:background="@color/colorPink1"
-                android:src="@mipmap/menu_icon_1"/>
-
-            <SearchView
-                android:id="@+id/music_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginStart="8dp"
-                android:queryHint="Search" />
-
-        </androidx.appcompat.widget.Toolbar>
+            android:layout_height="0.5dp"
+            android:background="@android:color/white" />
 
         <ImageView
-            android:id="@+id/white_margin"
-            android:layout_width="match_parent"
-            android:layout_height="0.3dp"
-            android:background="#FFF"
-            android:layout_below="@id/menu_bar"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/music_rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_layout"
-            android:layout_below="@+id/white_margin">
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/bottom_layout"
-        android:background="#66EEEEEE">
-            <ImageView
-                android:id="@+id/white_margin1"
-                android:layout_width="match_parent"
-                android:layout_height="0.3dp"
-                android:background="#FFF" />
-            <SeekBar
-                android:id="@+id/music_seekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/white_margin1"/>
-
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/music_icon_1" />
     </RelativeLayout>
 
-    </RelativeLayout>
-
+</RelativeLayout>
 
 
 </androidx.drawerlayout.widget.DrawerLayout>
