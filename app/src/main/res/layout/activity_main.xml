@@ -141,6 +141,10 @@
         app:headerLayout="@layout/menu_header"
         app:menu="@menu/navigation"/>
 
-
+    <FrameLayout
+        android:id="@+id/fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>
