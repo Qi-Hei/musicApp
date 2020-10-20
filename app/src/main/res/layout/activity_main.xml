@@ -18,7 +18,7 @@
     <RelativeLayout
         android:id="@+id/music_bottom"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="90dp"
         android:background="#55EEEEEE"
         android:layout_alignParentBottom="true">
         <ImageView
@@ -27,11 +27,50 @@
             android:background="@android:color/white" />
 
         <ImageView
+            android:id="@+id/music_bottom_icon"
             android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_height="60dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:src="@mipmap/music_icon_1" />
+
+        <TextView
+            android:id="@+id/music_bottom_song"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_toEndOf="@+id/music_bottom_icon"
+            android:text="告白气球"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/music_bottom_singer"
+            android:text="周杰伦"
+            android:layout_alignStart="@+id/music_bottom_song"
+            android:layout_below="@+id/music_bottom_song"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"/>
+
+        <ImageView
+            android:id="@+id/music_bottom_next"
+            android:layout_width="73dp"
+            android:layout_height="33dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/music_next"/>
+
+
+        <SeekBar
+            android:id="@+id/music_seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/music_bottom_icon"/>
+
+
     </RelativeLayout>
 
 </RelativeLayout>
