@@ -25,9 +25,45 @@ public class musicService extends Service {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                if(mediaPlayer!=null){
+                    myBinder.play_next();
+                    //playState=true;
+                }
+            }
+        });
+        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                return true;
+            }
+        });
+
+        //初始化信息
+        music_Id=-1;
+        music_singer="";
+        music_song="";
+
+        pausePosition = 0;
+        playState=false;
+        playModule=false;
+        myBinder = new MyBinder();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return myBinder;
     }
 
     public class MyBinder extends Binder {
