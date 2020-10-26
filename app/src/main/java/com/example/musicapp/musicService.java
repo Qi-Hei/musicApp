@@ -68,7 +68,7 @@ public class musicService extends Service {
 
     public class MyBinder extends Binder {
         public boolean setData(List<LocalMusicBean> musicBeanList){
-            Log.d("MusicService----0----", "setDatas");
+            Log.d("MusicService----0----", "setData");
             mDatas = musicBeanList;
             musicDataSize = mDatas.size();
             return true;

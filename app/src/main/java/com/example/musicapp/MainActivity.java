@@ -19,6 +19,12 @@ public class MainActivity extends AppCompatActivity {
    private List<LocalMusicBean> MainData, SetData;
    private LocalMusicAdapter MusicAdapter;
 
+   //与服务有关的
+    private  int musicDataSize;
+    private int currentId = 2;
+    private musicService.MyBinder myBinder;
+
+
 
 
     @Override
@@ -26,4 +32,5 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+
 }
