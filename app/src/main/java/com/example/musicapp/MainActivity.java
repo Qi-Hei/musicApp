@@ -188,6 +188,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawerLayout = findViewById(R.id.drawer);
         navigationView = findViewById(R.id.nav_view);
 
+        //获取状态栏高度
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        Notification_height = getResources().getDimensionPixelSize(resourceId);
+
+        seekBar.setProgress(0);
+
     }
 
     @Override
