@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SeekBar;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
    private ImageView nextIV,playIV,lastIV,albumIV,menuIV;
    private TextView singerTV,songTV;
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         //设置RecyclerView
         setRecycleView();
 
-        //读入数据
+        //获取本地数据源
         loadLocalMusicData();
 
         //启动音乐服务
@@ -146,9 +147,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+    /*
+     设置RecyclerView
+     */
     private void setRecycleView() {
-        //设置RecyclerView
         MainData = new ArrayList<>();
         SetData = new ArrayList<>();
         //创建适配器对象
@@ -159,7 +161,48 @@ public class MainActivity extends AppCompatActivity {
         musicRV.setLayoutManager(layoutManager);
     }
 
+
+    /*
+    初始化控件
+     */
     private void initView() {
+        //主页面控件
+        nextIV = findViewById(R.id.music_bottom_next);
+        playIV = findViewById(R.id.music_play);
+        lastIV = findViewById(R.id.music_last);
+        albumIV = findViewById(R.id.music_bottom_icon);
+        singerTV = findViewById(R.id.music_bottom_singer);
+        songTV = findViewById(R.id.music_bottom_song);
+        musicSearch = findViewById(R.id.music_search);
+        musicRV = findViewById(R.id.music_rv);
+        seekBar = findViewById(R.id.music_seekBar);
+
+        //点击事件
+        nextIV.setOnClickListener(this);
+        lastIV.setOnClickListener(this);
+        playIV.setOnClickListener(this);
+
+
+        //侧滑栏控件
+        menuIV = findViewById(R.id.menu_icon);
+        drawerLayout = findViewById(R.id.drawer);
+        navigationView = findViewById(R.id.nav_view);
+
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.music_bottom_next:
+
+                break;
+            case R.id.music_play:
+
+                break;
+            case R.id.music_last:
+
+                break;
+        }
+
+    }
 }
