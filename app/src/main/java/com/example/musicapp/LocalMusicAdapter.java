@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.LocalMusicViewHolder>{
@@ -41,7 +43,22 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.Lo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LocalMusicViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LocalMusicViewHolder holder, final int position) {
+        LocalMusicBean musicBean = mDatas.get(position);
+        holder.idTv.setText(musicBean.getId());
+        holder.songTv.setText(musicBean.getSong());
+        holder.singerTv.setText(musicBean.getSinger());
+        holder.albumTv.setText(musicBean.getAlbum());
+        //转换时间格式
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
+        String time = simpleDateFormat.format(new Date(musicBean.getDuration()));
+        holder.timeTv.setText(time);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.OnItemClick(v, position);
+            }
+        });
 
     }
 
