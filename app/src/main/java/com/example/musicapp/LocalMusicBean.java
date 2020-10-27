@@ -5,13 +5,13 @@ public class LocalMusicBean {
     private String song;    //歌曲名称
     private String singer;  //歌手名称
     private String album;   //专辑名称
-    private long duration;  //歌曲时长
+    private String duration;  //歌曲时长
     private String path;    //歌曲路径
 
     public LocalMusicBean() {
     }
 
-    public LocalMusicBean(String id, String song, String singer, String album, long duration, String path) {
+    public LocalMusicBean(String id, String song, String singer, String album,  String duration, String path) {
         this.id = id;
         this.song = song;
         this.singer = singer;
@@ -51,11 +51,11 @@ public class LocalMusicBean {
         this.album = album;
     }
 
-    public long getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    public void setDuration(long duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 

@@ -6,12 +6,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SeekBar;
@@ -19,6 +25,9 @@ import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,13 +58,107 @@ public class MainActivity extends AppCompatActivity {
     private FragmentTransaction transaction;
     private int Notification_height;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        //初始化控件
+        initView();
+
+        //设置RecyclerView
+        setRecycleView();
+
+        //读入数据
+        loadLocalMusicData();
+
+        //启动音乐服务
+        Intent serviceStart = new Intent(this,musicService.class);
+        startService(serviceStart);
+        //绑定服务
+        Intent mediaServiceIntent = new Intent(this, musicService.class);
+        serviceConn();
+        bindService(mediaServiceIntent, serviceConnection, BIND_AUTO_CREATE);
+
+        //设置广播接受者
+        setReceiver();
+
+        //设置搜索框
+        setSearchList();
+
+        //设置侧滑栏
+        setDrawer();
+
+        //设置点击事件
+        setEventListener();
+
+        //设置菜单fragment页面
+        setFragment();
+        
+
+    }
+
+    private void setFragment() {
+    }
+
+    private void setEventListener() {
+    }
+
+    private void setDrawer() {
+    }
+
+    private void setSearchList() {
+    }
+
+    private void setReceiver() {
+    }
+
+    private void serviceConn() {
+    }
+
+    private void loadLocalMusicData() {
+        //加载本地存储当中的音乐mp3文件到集合当中
+        // 获取ContentResolver对象
+        ContentResolver resolver = getContentResolver();
+        // 获取本地音乐存储的Uri地址
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        // 开始查询地址
+        Cursor cursor  = resolver.query(uri,null,null,null,null);
+        // 遍历Cursor
+        int id =0;
+        while (cursor.moveToNext()){
+            String song = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+            String singer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+            String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+            id++;
+            String sId = String.valueOf(id);
+            String path =cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+            long duration =cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+            SimpleDateFormat simpleDateFormat =new SimpleDateFormat("mm:ss");
+            String time = simpleDateFormat.format(new Date(duration));
+            //封装数据
+            LocalMusicBean localMusicBean =new LocalMusicBean(sId,song,singer,time,path);
+
+
+        }
+
+
+
+    }
+
+    private void setRecycleView() {
+        //设置RecyclerView
+        MainData = new ArrayList<>();
+        SetData = new ArrayList<>();
+        //创建适配器对象
+        MusicAdapter = new LocalMusicAdapter(this, SetData);
+        musicRV.setAdapter(MusicAdapter);
+        //设置布局管理器
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        musicRV.setLayoutManager(layoutManager);
+    }
+
+    private void initView() {
     }
 
 }
