@@ -15,8 +15,8 @@ public class musicService extends Service {
     private  String path;
     private int pausePosition;
     private MyBinder myBinder;
-    private String music_singer, music_song;
-    private int music_Id, music_duration;
+    private String music_singer, music_song,music_duration;
+    private int music_Id;
     private List<LocalMusicBean> mDatas;
     private int musicDataSize;
     private boolean playState, playModule;
@@ -89,7 +89,7 @@ public class musicService extends Service {
                 mediaPlayer.setDataSource(path);
                 music_song = musicBean.getSong();
                 music_singer = musicBean.getSinger();
-                music_duration = (int) musicBean.getDuration();
+                music_duration = musicBean.getDuration();
                 //调用意图服务，更新activity内容
                 Intent intentInfo = new Intent("com.example.musicapp.intentService");
                 intentInfo.setPackage(getPackageName());

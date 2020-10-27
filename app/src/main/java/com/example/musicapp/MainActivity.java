@@ -137,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
             SimpleDateFormat simpleDateFormat =new SimpleDateFormat("mm:ss");
             String time = simpleDateFormat.format(new Date(duration));
             //封装数据
-            LocalMusicBean localMusicBean =new LocalMusicBean(sId,song,singer,time,path);
+            LocalMusicBean localMusicBean =new LocalMusicBean(sId,song,singer,album,time,path);
+
 
 
         }
