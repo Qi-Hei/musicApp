@@ -1,6 +1,7 @@
 package com.example.musicapp;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,7 +35,9 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.Lo
     @NonNull
     @Override
     public LocalMusicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(context).inflate(R.layout.item_music,parent,false);
+        LocalMusicViewHolder holder = new LocalMusicViewHolder(view);
+        return holder;
     }
 
     @Override
