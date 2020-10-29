@@ -14,6 +14,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,7 +39,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
    private SearchView musicSearch;
    private RecyclerView musicRV;
    private List<LocalMusicBean> MainData, SetData;
-   private LocalMusicAdapter MusicAdapter;
+   private LocalMusicAdapter musicAdapter;
+   private MediaPlayer mediaPlayer;
+   private int position;
+   private int currentPosition = -1; //记录当前播放的音乐的位置
 
    //与服务有关的
     private  int musicDataSize;
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+        mediaPlayer = new MediaPlayer();
         //初始化控件
         initView();
 
@@ -102,7 +106,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setFragment() {
     }
 
+    /* 设置每一项的点击事件  */
     private void setEventListener() {
+        musicAdapter.setOnItemClickListener(new LocalMusicAdapter.OnItemClickListener() {
+            @Override
+            public void OnItemClick(View view, int position) {
+                currentPosition = position;
+                LocalMusicBean musicBean = SetData.get(position);
+                singerTV.setText(musicBean.getSinger());
+                songTV.setText(musicBean.getSong());
+                stopMusic();
+
+            }
+        });
+
+    }
+
+    private void stopMusic() {
+        /*  停止音乐  */
+
     }
 
     private void setDrawer() {
@@ -119,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void loadLocalMusicData() {
         //加载本地存储当中的音乐mp3文件到集合当中
+        LocalMusicBean bean;
         // 获取ContentResolver对象
         ContentResolver resolver = getContentResolver();
         // 获取本地音乐存储的Uri地址
@@ -139,13 +162,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String time = simpleDateFormat.format(new Date(duration));
             //封装数据
             LocalMusicBean localMusicBean =new LocalMusicBean(sId,song,singer,album,time,path);
-
-
-
+            MainData.add(localMusicBean);
         }
-
-
-
+        if(id==0) {
+            bean = new LocalMusicBean("0", "没有找到本地歌曲", "", "", "0", "");
+            MainData.add(bean);
+            currentId=-2;
+        } else{
+            currentId=-1;
+        }
+        musicDataSize = MainData.size();
+        SetData.addAll(MainData);
+        //数据源变化，提示适配器更新
+        musicAdapter.notifyDataSetChanged();
     }
     /*
      设置RecyclerView
@@ -154,8 +183,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MainData = new ArrayList<>();
         SetData = new ArrayList<>();
         //创建适配器对象
-        MusicAdapter = new LocalMusicAdapter(this, SetData);
-        musicRV.setAdapter(MusicAdapter);
+        musicAdapter = new LocalMusicAdapter(this, SetData);
+        musicRV.setAdapter(musicAdapter);
         //设置布局管理器
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         musicRV.setLayoutManager(layoutManager);
