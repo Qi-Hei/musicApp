@@ -10,8 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
+import java.sql.Time;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.LocalMusicViewHolder>{
@@ -49,10 +50,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.Lo
         holder.songTv.setText(musicBean.getSong());
         holder.singerTv.setText(musicBean.getSinger());
         holder.albumTv.setText(musicBean.getAlbum());
-        //转换时间格式
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
-        String time = simpleDateFormat.format(new Date(musicBean.getDuration()));
-        holder.timeTv.setText(time);
+        holder.timeTv.setText(musicBean.getDuration());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
