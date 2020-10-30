@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -18,12 +19,14 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -31,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.LogRecord;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -137,6 +141,64 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void serviceConn() {
+        serviceConnection = new ServiceConnection(){
+
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                myBinder =(musicService.MyBinder) service;
+                //如果主activity启动时正在播放
+                if(myBinder.getMediaPlayState() ==1){
+                    playIV.setImageResource(R.mipmap.music_pause);
+                    songTV.setText(myBinder.getMusicSong());
+                    singerTV.setText(myBinder.getMusicSinger());
+                    currentId=myBinder.getMusicId();
+                    //设置进度条大小
+                    seekBar.setMax(myBinder.getMusicDuration());
+                }
+
+                //传递播放列表
+                myBinder.setData(MainData);
+
+                //初始化进度条
+                seekBar.setProgress(0);
+                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        //响应用户点击设置进度条
+                        if(fromUser && currentId !=-1 && currentId !=-2){
+                            myBinder.seekToPosition(seekBar.getProgress());
+                        }
+                        else if(fromUser){
+                            Toast.makeText(MainActivity.this, "请选择播放音乐", Toast.LENGTH_SHORT).show();
+                            seekBar.setProgress(0);
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+                //设置进度条控制线程
+                handler = new Handler();
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                };
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
     }
 
     private void loadLocalMusicData() {
