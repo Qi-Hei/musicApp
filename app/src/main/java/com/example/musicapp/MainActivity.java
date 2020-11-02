@@ -41,7 +41,7 @@ import java.util.logging.LogRecord;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-   private ImageView nextIV,playIV,lastIV,albumIV,menuIV;
+   private ImageView nextIV,playIV,lastIV,albumIV,menuIV,modeIV;
    private TextView singerTV,songTV;
    private SearchView musicSearch;
    private RecyclerView musicRV;
@@ -118,15 +118,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         musicAdapter.setOnItemClickListener(new LocalMusicAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(View view, int position) {
-                currentPosition = position;
-                LocalMusicBean musicBean = SetData.get(position);
-                singerTV.setText(musicBean.getSinger());
-                songTV.setText(musicBean.getSong());
-                stopMusic();
+                LocalMusicBean bean = SetData.get(position);
+                playMusicOnService(Integer.parseInt(bean.getId())-1);
+            }
+        });
+        //设置单曲循环/列表循环/随机循环
+        modeIV.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                myBinder.setPlayModule();
+                if(myBinder.getPlayModule()){
+                    Toast.makeText(MainActivity.this,"单曲循环",Toast.LENGTH_SHORT).show();
+                    modeIV.setImageResource(R.mipmap.music_cycle);
+                }
 
             }
         });
 
+
+    }
+
+    private void playMusicOnService( int Id) {
     }
 
     private void stopMusic() {
@@ -276,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lastIV = findViewById(R.id.music_last);
         albumIV = findViewById(R.id.music_bottom_icon);
         singerTV = findViewById(R.id.music_bottom_singer);
+        modeIV = findViewById(R.id.music_mode);
         songTV = findViewById(R.id.music_bottom_song);
         musicSearch = findViewById(R.id.music_search);
         musicRV = findViewById(R.id.music_rv);

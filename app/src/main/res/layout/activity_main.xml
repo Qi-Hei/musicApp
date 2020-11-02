@@ -101,7 +101,7 @@
             android:layout_height="33dp"
             android:layout_marginTop="27dp"
             android:layout_marginEnd="3dp"
-            android:layout_toStartOf="@+id/music_random"
+            android:layout_toStartOf="@+id/music_mode"
             android:src="@mipmap/music_next" />
 
         <ImageView
@@ -124,7 +124,7 @@
             android:src="@mipmap/music_last" />
 
         <ImageView
-            android:id="@+id/music_random"
+            android:id="@+id/music_mode"
             android:layout_width="84dp"
             android:layout_height="51dp"
             android:layout_alignTop="@id/music_bottom_next"
