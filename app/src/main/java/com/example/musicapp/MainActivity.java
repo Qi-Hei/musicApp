@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String singer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
             String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
             id++;
-            String sId = String.valueOf(id);
+            String sId = String.valueOf(id+1);
             String path =cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
             long duration =cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             SimpleDateFormat simpleDateFormat =new SimpleDateFormat("mm:ss");

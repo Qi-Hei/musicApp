@@ -19,7 +19,8 @@ public class musicService extends Service {
     private int music_Id;
     private List<LocalMusicBean> mDatas;
     private int musicDataSize;
-    private boolean playState, playModule;
+    private boolean playState;
+    private int playModule;
 
     public musicService() {
     }
@@ -51,7 +52,7 @@ public class musicService extends Service {
 
         pausePosition = 0;
         playState=false;
-        playModule=false;
+        playModule=0;
         myBinder = new MyBinder();
     }
 
@@ -137,7 +138,7 @@ public class musicService extends Service {
         //下一首
         public void play_next() {
             //判断是否为单曲循环
-            if(!playModule) {
+            if(playModule!=1) {
                 //判断是否是最后一首
                 if (music_Id >= musicDataSize - 1) {
                     //从第一首开始播放
@@ -228,14 +229,15 @@ public class musicService extends Service {
             else return -1;
         }
 
-        //设置播放模式
+        //设置播放模式 0:随机 1：单曲 2：列表
         public void setPlayModule(){
-            if(playModule) playModule=false;
-            else playModule=true;
+            if(playModule==0) playModule=1;
+            else if(playModule==1) playModule=2;
+            else playModule=0;
         }
 
         //获取播放模式
-        public boolean getPlayModule(){
+        public int getPlayModule(){
             return playModule;
         }
 
