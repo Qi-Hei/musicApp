@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -20,7 +21,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -143,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void serviceConn() {
         serviceConnection = new ServiceConnection(){
 
+            @SuppressLint("HandlerLeak")
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 myBinder =(musicService.MyBinder) service;
@@ -184,14 +188,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
                 });
-                //设置进度条控制线程
+
                 handler = new Handler();
                 runnable = new Runnable() {
+                    private int pre=-1, pos;
                     @Override
                     public void run() {
+                        pos = myBinder.getPlayPosition();
+                        if(currentId!=-1 && currentId!=-2)
+                            seekBar.setProgress(pos);
+                        Log.d("RunnablePos", String.valueOf(pos));
 
+                        if(pre!=pos) handler.postDelayed(runnable, 1000);
+                        else handler.postDelayed(runnable, 2000);
+                        pre = pos;
                     }
                 };
+                handler.post(runnable);
             }
 
             @Override

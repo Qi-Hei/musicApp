@@ -31,10 +31,10 @@
             android:id="@+id/music_song"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="45dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="14dp"
             android:layout_toEndOf="@id/music_num"
             android:singleLine="true"
-            android:layout_marginTop="14dp"
             android:text="玫瑰花的葬礼"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -70,7 +70,7 @@
             android:layout_below="@+id/music_singer"
             android:layout_alignParentEnd="true"
             android:text=""
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="#aaa"/>
 
     </RelativeLayout>
