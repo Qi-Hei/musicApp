@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 public class musicService extends Service {
     private MediaPlayer mediaPlayer;
@@ -137,8 +138,7 @@ public class musicService extends Service {
 
         //下一首
         public void play_next() {
-            //判断是否为单曲循环
-            if(playModule!=1) {
+            if(playModule==2) {
                 //判断是否是最后一首
                 if (music_Id >= musicDataSize - 1) {
                     //从第一首开始播放
@@ -146,6 +146,10 @@ public class musicService extends Service {
                 }
                 music_Id = music_Id + 1;
 
+            }
+            else if(playModule==0){
+                Random random = new Random();
+                music_Id = random.nextInt(musicDataSize-1);
             }
             setMusic(music_Id);
             playMusic();
