@@ -1,6 +1,7 @@
 package com.example.musicapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -128,11 +129,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 myBinder.setPlayModule();
-                if(myBinder.getPlayModule()){
+                if(myBinder.getPlayModule()==0){
+                    Toast.makeText(MainActivity.this,"随机播放",Toast.LENGTH_SHORT).show();
+                    modeIV.setImageResource(R.mipmap.music_random);
+                }
+                else if(myBinder.getPlayModule()==1){
                     Toast.makeText(MainActivity.this,"单曲循环",Toast.LENGTH_SHORT).show();
                     modeIV.setImageResource(R.mipmap.music_cycle);
                 }
+                else {
+                    Toast.makeText(MainActivity.this,"列表循环",Toast.LENGTH_SHORT).show();
+                    modeIV.setImageResource(R.mipmap.music_list);
+                }
 
+            }
+        });
+
+        menuIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         });
 
