@@ -106,7 +106,7 @@ public class musicService extends Service {
             }
         }
 
-        private void playMusic() {
+        void playMusic() {
             /* 播放音乐的函数*/
             Log.d("MusicService----2----", "playMusic");
             if (mediaPlayer != null && !mediaPlayer.isPlaying()) {

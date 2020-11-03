@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,7 +24,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,14 +35,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.musicapp.Fragment.Fragment_add;
 import com.google.android.material.navigation.NavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.LogRecord;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -72,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //侧滑栏部分
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    private Fragment fragment_about, fragment_introduction, fragment_add;
+    private Fragment fragment_add;
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
     private int Notification_height;
@@ -118,6 +115,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setFragment() {
+        fragmentManager = getSupportFragmentManager();
+        fragment_add = new Fragment_add();
+        transaction = fragmentManager.beginTransaction();
     }
 
     /* 设置每一项的点击事件  */
@@ -162,12 +162,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void playMusicOnService( int Id) {
+        //根据传入id播放音乐
+        if(Id<10 && isNetAvailable)
+            Toast.makeText(MainActivity.this,"在线歌曲",Toast.LENGTH_SHORT).show();
+        //设置服务信息
+        myBinder.setMusic(Id);
+        playIV.setImageResource(R.mipmap.music_pause);
     }
 
-    private void stopMusic() {
-        /*  停止音乐  */
-
-    }
 
     private void setDrawer() {
         navigationView.setItemIconTintList(null);
@@ -179,10 +181,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (menuItem.getItemId()){
                     case R.id.menu_home:
                         Log.d("ItemSelectiedLister","home");
-                        transaction = fragmentManager.beginTransaction();
-                        transaction.remove(fragment_about).commit();
-                        transaction = fragmentManager.beginTransaction();
-                        transaction.remove(fragment_introduction).commit();
                         transaction =fragmentManager.beginTransaction();
                         transaction.remove(fragment_add).commit();
                         break;
@@ -192,9 +190,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d("ItemSelectedListener","add");
                         break;
                     case R.id.menu_function:
-                        transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.fragment,fragment_introduction).commit();
+                        Toast.makeText(MainActivity.this,"功能",Toast.LENGTH_SHORT).show();
                         Log.d("ItemSelectedListener","function");
+                        break;
+                    case R.id.menu_about:
+                        Toast.makeText(MainActivity.this,"关于",Toast.LENGTH_SHORT).show();
+                        Log.d("ItemSelectedListener","about");
                         break;
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -203,8 +204,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        //设置滑动主Activity跟随
-        drawerLayout.setDrawerListener();
     }
 
     private void setSearchList() {
@@ -417,15 +416,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.music_bottom_next:
-
+                if(currentId==-2){
+                    //没有播放音乐
+                    Toast.makeText(this, "没有获取到音乐", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(currentId==-1){
+                    //没有播放音乐
+                    Toast.makeText(this, "开始播放最后一首~", Toast.LENGTH_SHORT).show();
+                    currentId = musicDataSize-2;
+                }
+                if (currentId==musicDataSize-1) {
+                    Toast.makeText(this,"没有下一首了嗷~",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                currentId=currentId+1;
+                playMusicOnService(currentId);
                 break;
             case R.id.music_play:
-
+                if(currentId==-1){
+                    //没有播放音乐
+                    Toast.makeText(this, "请选择播放音乐", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(currentId==-2){
+                    Toast.makeText(this, "请打开软件存储权限", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                int state = myBinder.getMediaPlayState();
+                if(state==1) {
+                    myBinder.pauseMusic();
+                    playIV.setImageResource(R.mipmap.music_play);
+                } else if(state==0){
+                    myBinder.playMusic();
+                    playIV.setImageResource(R.mipmap.music_pause);
+                } else if(state==2){
+                    Toast.makeText(this, "播放结束了~", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.music_last:
-
+                if(currentId ==-2){
+                    //没有音乐播放
+                    Toast.makeText(this, "没有获取到音乐", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(currentId==-1){
+                    //没有播放音乐
+                    Toast.makeText(this, "开始播放第一首~", Toast.LENGTH_SHORT).show();
+                    currentId=1;
+                }
+                if (currentId==0) {
+                    Toast.makeText(this,"已经是第一首了嗷~",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                currentId = currentId-1;
+                playMusicOnService(currentId);
                 break;
         }
 
+    }
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(myReceiver);
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
+        unbindService(serviceConnection);
     }
 }
