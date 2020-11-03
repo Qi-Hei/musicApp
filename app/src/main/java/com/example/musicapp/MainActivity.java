@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //侧滑栏部分
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    private Fragment fragment_about, fragment_introduction, fragment_message;
+    private Fragment fragment_about, fragment_introduction, fragment_add;
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
     private int Notification_height;
@@ -176,10 +176,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-                return false;
+                switch (menuItem.getItemId()){
+                    case R.id.menu_home:
+                        Log.d("ItemSelectiedLister","home");
+                        transaction = fragmentManager.beginTransaction();
+                        transaction.remove(fragment_about).commit();
+                        transaction = fragmentManager.beginTransaction();
+                        transaction.remove(fragment_introduction).commit();
+                        transaction =fragmentManager.beginTransaction();
+                        transaction.remove(fragment_add).commit();
+                        break;
+                    case R.id.menu_add:
+                        transaction  = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragment,fragment_add).commit();
+                        Log.d("ItemSelectedListener","add");
+                        break;
+                    case R.id.menu_function:
+                        transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragment,fragment_introduction).commit();
+                        Log.d("ItemSelectedListener","function");
+                        break;
+                }
+                drawerLayout.closeDrawer(GravityCompat.START);
+                transaction.addToBackStack(null);
+                return true;
             }
         });
+
+        //设置滑动主Activity跟随
+        drawerLayout.setDrawerListener();
     }
 
     private void setSearchList() {
