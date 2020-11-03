@@ -1,5 +1,6 @@
 package com.example.musicapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -14,7 +15,9 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -24,7 +27,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -38,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.LogRecord;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -164,12 +170,64 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setDrawer() {
+        navigationView.setItemIconTintList(null);
+        navigationView.getChildAt(0).setVerticalScrollBarEnabled(false);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                return false;
+            }
+        });
     }
 
     private void setSearchList() {
+        //设置SearchView默认是否自动缩小为图标
+        musicSearch.setIconifiedByDefault(true);
+        musicSearch.setFocusable(false);
+        //设置搜索框监听器
+        musicSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //点击搜索时激发
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //输入时激发
+                if(TextUtils.isEmpty(newText)) {
+                    SetData.clear();
+                    SetData.addAll(MainData);
+                    musicAdapter.notifyDataSetChanged();
+                }else {
+                    //根据输入内容对RecycleView进行搜索
+                    SetData.clear();
+                    for(LocalMusicBean bean:MainData){
+                        if(bean.getSong().contains(newText)|| bean.getSinger().contains(newText)){
+                            SetData.add(bean);
+                        }
+                    }
+                    musicAdapter.notifyDataSetChanged();
+                }
+                return true;
+            }
+        });
     }
 
     private void setReceiver() {
+        myReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                songTV.setText(intent.getStringExtra("music_song"));
+                singerTV.setText(intent.getStringExtra("music_singer"));
+                currentId = intent.getIntExtra("music_Id",-1);
+                seekBar .setMax(Integer.parseInt(intent.getStringExtra("music_duration")));
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter("UI_info");
+        registerReceiver(myReceiver,intentFilter);
     }
 
     private void serviceConn() {

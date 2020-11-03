@@ -4,7 +4,7 @@
         android:id="@+id/group1"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/item_0"
+            android:id="@+id/menu_home"
             android:icon="@mipmap/menu_home"
             android:title="首页" />
 
@@ -14,12 +14,12 @@
             android:title="添加歌曲" >
         </item>
         <item
-            android:id="@+id/item_2"
+            android:id="@+id/menu_function"
             android:icon="@mipmap/menu_function"
             android:title="功能介绍" >
         </item>
         <item
-            android:id="@+id/item_3"
+            android:id="@+id/menu_about"
             android:icon="@mipmap/menu_about"
             android:title="关于" >
         </item>
