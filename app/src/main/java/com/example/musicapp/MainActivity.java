@@ -42,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -52,8 +53,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
    private List<LocalMusicBean> MainData, SetData;
    private LocalMusicAdapter musicAdapter;
    private MediaPlayer mediaPlayer;
-   private int position;
-   private int currentPosition = -1; //记录当前播放的音乐的位置
+
+    //定时器
+    private Timer timer;
+    //互斥变量
+    boolean isSeekbarChanging;
 
    //与服务有关的
     private  int musicDataSize;
@@ -247,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 songTV.setText(intent.getStringExtra("music_song"));
                 singerTV.setText(intent.getStringExtra("music_singer"));
                 currentId = intent.getIntExtra("music_Id",-1);
-                seekBar .setMax(Integer.parseInt(intent.getStringExtra("music_duration")));
+                seekBar.setMax(intent.getIntExtra("music_duration",0));
             }
         };
         IntentFilter intentFilter = new IntentFilter("UI_info");
@@ -335,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 开始查询地址
         Cursor cursor  = resolver.query(uri,null,null,null,null);
         // 遍历Cursor
-        int id =0;
+        int id = -1;
         while (cursor.moveToNext()){
             String song = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
             String singer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
@@ -344,14 +348,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String sId = String.valueOf(id+1);
             String path =cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
             long duration =cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-            SimpleDateFormat simpleDateFormat =new SimpleDateFormat("mm:ss");
-            String time = simpleDateFormat.format(new Date(duration));
             //封装数据
-            LocalMusicBean localMusicBean =new LocalMusicBean(sId,song,singer,album,time,path);
+            LocalMusicBean localMusicBean =new LocalMusicBean(sId,song,singer,album,duration,path);
             MainData.add(localMusicBean);
         }
         if(id==0) {
-            bean = new LocalMusicBean("0", "没有找到本地歌曲", "", "", "0", "");
+            bean = new LocalMusicBean("0", "没有找到本地歌曲", "", "", 0, "");
             MainData.add(bean);
             currentId=-2;
         } else{
@@ -416,16 +418,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.music_bottom_next:
-                if(currentId==-2){
-                    //没有播放音乐
-                    Toast.makeText(this, "没有获取到音乐", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(currentId==-1){
-                    //没有播放音乐
-                    Toast.makeText(this, "开始播放最后一首~", Toast.LENGTH_SHORT).show();
-                    currentId = musicDataSize-2;
-                }
                 if (currentId==musicDataSize-1) {
                     Toast.makeText(this,"没有下一首了嗷~",Toast.LENGTH_SHORT).show();
                     return;
@@ -437,10 +429,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(currentId==-1){
                     //没有播放音乐
                     Toast.makeText(this, "请选择播放音乐", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(currentId==-2){
-                    Toast.makeText(this, "请打开软件存储权限", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 int state = myBinder.getMediaPlayState();
@@ -455,16 +443,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.music_last:
-                if(currentId ==-2){
-                    //没有音乐播放
-                    Toast.makeText(this, "没有获取到音乐", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(currentId==-1){
-                    //没有播放音乐
-                    Toast.makeText(this, "开始播放第一首~", Toast.LENGTH_SHORT).show();
-                    currentId=1;
-                }
                 if (currentId==0) {
                     Toast.makeText(this,"已经是第一首了嗷~",Toast.LENGTH_SHORT).show();
                     return;

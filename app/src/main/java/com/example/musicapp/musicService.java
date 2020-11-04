@@ -10,18 +10,21 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
 
 public class musicService extends Service {
     private MediaPlayer mediaPlayer;
     private  String path;
     private int pausePosition;
     private MyBinder myBinder;
-    private String music_singer, music_song,music_duration;
-    private int music_Id;
+    private String music_singer, music_song;
+    private int music_Id,music_duration;
     private List<LocalMusicBean> mDatas;
     private int musicDataSize;
     private boolean playState;
     private int playModule;
+
+
 
     public musicService() {
     }
@@ -91,9 +94,9 @@ public class musicService extends Service {
                 mediaPlayer.setDataSource(path);
                 music_song = musicBean.getSong();
                 music_singer = musicBean.getSinger();
-                music_duration = musicBean.getDuration();
+                music_duration = (int)musicBean.getDuration();
                 //调用意图服务，更新activity内容
-                Intent intentInfo = new Intent("com.example.musicapp.intentService");
+                Intent intentInfo = new Intent("com.example.musicApp.intentService");
                 intentInfo.setPackage(getPackageName());
                 intentInfo.putExtra("music_id", music_Id);
                 intentInfo.putExtra("music_song", music_song);

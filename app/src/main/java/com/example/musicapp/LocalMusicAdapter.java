@@ -50,7 +50,10 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.Lo
         holder.songTv.setText(musicBean.getSong());
         holder.singerTv.setText(musicBean.getSinger());
         holder.albumTv.setText(musicBean.getAlbum());
-        holder.timeTv.setText(musicBean.getDuration());
+        //转换时间格式
+        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
+        String time = sdf.format(new Date(musicBean.getDuration()));
+        holder.timeTv.setText(time);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
