@@ -31,19 +31,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SeekBar;
+import android.widget.SimpleAdapter;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.musicapp.Fragment.Fragment_add;
 import com.google.android.material.navigation.NavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -77,9 +83,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //侧滑栏部分
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    private Fragment fragment_add;
-    private FragmentManager fragmentManager;
-    private FragmentTransaction transaction;
     private int Notification_height;
 
     @Override
@@ -113,16 +116,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //设置点击事件
         setEventListener();
 
-        //设置菜单fragment页面
-        setFragment();
-        
-
-    }
-
-    private void setFragment() {
-        fragmentManager = getSupportFragmentManager();
-        fragment_add = new Fragment_add();
-        transaction = fragmentManager.beginTransaction();
     }
 
     /* 设置每一项的点击事件  */
@@ -198,8 +191,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (menuItem.getItemId()){
                     case R.id.menu_home:
                         Log.d("ItemSelectiedLister","home");
-                        transaction =fragmentManager.beginTransaction();
-                        transaction.remove(fragment_add).commit();
                         break;
                     case R.id.menu_add:
                         addDialog();
@@ -214,8 +205,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d("ItemSelectedListener","about");
                         break;
                 }
-                drawerLayout.closeDrawer(GravityCompat.START);
-                transaction.addToBackStack(null);
                 return true;
             }
         });
@@ -224,8 +213,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void addDialog() {
         /* 添加音乐  */
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        final View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.adddialog,null,false);
+        final TableLayout tableLayout = (TableLayout) getLayoutInflater().inflate(R.layout.adddialog, null);
+        int id = MainData.size()-1;
+        MediaPlayer song1 = MediaPlayer.create(this,R.raw.memories);
+        MediaPlayer song2 = MediaPlayer.create(this,R.raw.howyoulikethat);
+        final LocalMusicBean bean1 = new LocalMusicBean(String.valueOf(id+1),"Memories","Maroon 5","1",song1.getDuration(),null);
+        final LocalMusicBean bean2 = new LocalMusicBean(String.valueOf(id+2),"how you like that","blackpink","1",song2.getDuration(),null);
+        new AlertDialog.Builder(this)
+                .setTitle("添加音乐")
+                .setView(tableLayout)
+                .setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        switch (view.getId()){
+                            case R.id.song1:
+                                MainData.add(bean1);
+                                break;
+                            case R.id.song2:
+                                MainData.add(bean2);
+                                break;
+                        }
+                        SetData.clear();
+                        musicDataSize = MainData.size();
+                        SetData.addAll(MainData);
+                        //数据源变化，提示适配器更新
+                        musicAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                })
+                .create()
+                .show();
+
+
     }
 
     private void setSearchList() {
