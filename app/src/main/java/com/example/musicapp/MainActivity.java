@@ -1,6 +1,7 @@
 package com.example.musicapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -27,6 +28,7 @@ import android.os.IBinder;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -200,8 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         transaction.remove(fragment_add).commit();
                         break;
                     case R.id.menu_add:
-                        transaction  = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.fragment,fragment_add).commit();
+                        addDialog();
                         Log.d("ItemSelectedListener","add");
                         break;
                     case R.id.menu_function:
@@ -219,6 +220,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+    }
+
+    private void addDialog() {
+        /* 添加音乐  */
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        final View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.adddialog,null,false);
     }
 
     private void setSearchList() {
@@ -417,6 +424,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onServiceDisconnected(ComponentName name) {
         myBinder=null;
     }
+
+
 
     //seekBar监听器
     @Override
