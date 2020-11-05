@@ -43,19 +43,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener ,SeekBar.OnSeekBarChangeListener,ServiceConnection{
 
    private ImageView nextIV,playIV,lastIV,albumIV,menuIV,modeIV;
-   private TextView singerTV,songTV;
+   private TextView singerTV,songTV,currentTime,totalTime;
    private SearchView musicSearch;
    private RecyclerView musicRV;
    private List<LocalMusicBean> MainData, SetData;
    private LocalMusicAdapter musicAdapter;
    private MediaPlayer mediaPlayer;
-
     //定时器
     private Timer timer;
+
+
     //互斥变量
     boolean isSeekbarChanging;
 
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mediaPlayer = new MediaPlayer();
         //初始化控件
         initView();
-
+        seekBar.setOnSeekBarChangeListener(this);
         //设置RecyclerView
         setRecycleView();
 
@@ -95,10 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //启动音乐服务
         Intent serviceStart = new Intent(this,musicService.class);
         startService(serviceStart);
-        //绑定服务
-        Intent mediaServiceIntent = new Intent(this, musicService.class);
-        serviceConn();
-        bindService(mediaServiceIntent, serviceConnection, BIND_AUTO_CREATE);
+        bindService(serviceStart, this, BIND_AUTO_CREATE);
 
         //设置广播接受者
         setReceiver();
@@ -130,7 +129,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void OnItemClick(View view, int position) {
                 LocalMusicBean bean = SetData.get(position);
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if(!isSeekbarChanging){
+                            seekBar.setProgress((int) myBinder.getPlayPosition() / 1000);
+                        }
+                    }
+                }, 0 , 100);
                 playMusicOnService(Integer.parseInt(bean.getId())-1);
+                songTV.setText(myBinder.getMusicSong());
+                singerTV.setText(myBinder.getMusicSinger());
+                currentId=myBinder.getMusicId();
             }
         });
         //设置单曲循环/列表循环/随机循环
@@ -258,77 +269,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         registerReceiver(myReceiver,intentFilter);
     }
 
-    private void serviceConn() {
-        serviceConnection = new ServiceConnection(){
-
-            @SuppressLint("HandlerLeak")
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                myBinder =(musicService.MyBinder) service;
-                //如果主activity启动时正在播放
-                if(myBinder.getMediaPlayState() ==1){
-                    playIV.setImageResource(R.mipmap.music_pause);
-                    songTV.setText(myBinder.getMusicSong());
-                    singerTV.setText(myBinder.getMusicSinger());
-                    currentId=myBinder.getMusicId();
-                    //设置进度条大小
-                    seekBar.setMax(myBinder.getMusicDuration());
-                }
-
-                //传递播放列表
-                myBinder.setData(MainData);
-
-                //初始化进度条
-                seekBar.setProgress(0);
-                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        //响应用户点击设置进度条
-                        if(fromUser && currentId !=-1 && currentId !=-2){
-                            myBinder.seekToPosition(seekBar.getProgress());
-                        }
-                        else if(fromUser){
-                            Toast.makeText(MainActivity.this, "请选择播放音乐", Toast.LENGTH_SHORT).show();
-                            seekBar.setProgress(0);
-                        }
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                    }
-                });
-
-                handler = new Handler();
-                runnable = new Runnable() {
-                    private int pre=-1, pos;
-                    @Override
-                    public void run() {
-                        pos = myBinder.getPlayPosition();
-                        if(currentId!=-1 && currentId!=-2)
-                            seekBar.setProgress(pos);
-                        Log.d("RunnablePos", String.valueOf(pos));
-
-                        if(pre!=pos) handler.postDelayed(runnable, 1000);
-                        else handler.postDelayed(runnable, 2000);
-                        pre = pos;
-                    }
-                };
-                handler.post(runnable);
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        };
-    }
-
     private void loadLocalMusicData() {
         //加载本地存储当中的音乐mp3文件到集合当中
         LocalMusicBean bean;
@@ -394,6 +334,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         musicSearch = findViewById(R.id.music_search);
         musicRV = findViewById(R.id.music_rv);
         seekBar = findViewById(R.id.music_seekBar);
+        currentTime = findViewById(R.id.currentTime);
+        totalTime = findViewById(R.id.total_time);
+
 
         //点击事件
         nextIV.setOnClickListener(this);
@@ -459,5 +402,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         handler.removeCallbacks(runnable);
         unbindService(serviceConnection);
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        myBinder =(musicService.MyBinder) service;
+        //传递播放列表
+        myBinder.setData(MainData);
+
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        myBinder=null;
+    }
+
+    //seekBar监听器
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    //获取音乐时长
+        int time = myBinder.getMusicDuration() /1000;
+    //获取当前播放位置
+        int position = myBinder.getPlayPosition() /1000;
+        int total_min = time / 60;
+        int total_sec = time % 60;
+        int current_min = position / 60;
+        int current_sec = position % 60;
+        seekBar.setMax(time);
+        totalTime.setText(total_min + ":" + total_sec);
+        currentTime.setText(current_min + ":" + current_sec);
+    }
+
+    /*滚动时,应当暂停后台定时器*/
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+         isSeekbarChanging =true;
+    }
+
+    /*滑动结束后，重新设置值*/
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        isSeekbarChanging=false;
+        myBinder.seekToPosition(seekBar.getProgress() * 1000);
+
+        int min = (int) ((myBinder.getPlayPosition() / 1000) / 60);
+        int sec = (int) ((myBinder.getPlayPosition() / 1000) % 60);
+        currentTime.setText(min + ":" + sec);
     }
 }

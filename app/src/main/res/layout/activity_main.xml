@@ -67,9 +67,9 @@
 
         <ImageView
             android:id="@+id/music_bottom_icon"
-            android:layout_width="65dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="20dp"
+            android:layout_width="45dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:src="@mipmap/music_icon_1" />
 
@@ -77,37 +77,38 @@
             android:id="@+id/music_bottom_song"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="15dp"
             android:layout_toEndOf="@+id/music_bottom_icon"
-            android:text="告白气球"
-            android:textSize="18sp"
+            android:text=""
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/music_bottom_singer"
-            android:text="周杰伦"
+            android:text=""
             android:layout_alignStart="@+id/music_bottom_song"
             android:layout_below="@+id/music_bottom_song"
             android:layout_marginTop="10dp"
-            android:textSize="15sp"/>
+            android:textSize="12sp"/>
 
 
         <ImageView
             android:id="@+id/music_bottom_next"
-            android:layout_width="62dp"
-            android:layout_height="35dp"
+            android:layout_width="40dp"
+            android:layout_height="37dp"
             android:layout_alignTop="@+id/music_last"
+            android:layout_marginTop="-1dp"
             android:layout_toEndOf="@+id/music_play"
             android:src="@mipmap/music_next" />
 
         <ImageView
             android:id="@+id/music_play"
-            android:layout_width="55dp"
+            android:layout_width="44dp"
             android:layout_height="45dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="17dp"
             android:layout_toEndOf="@+id/music_last"
             android:src="@mipmap/music_play" />
 
@@ -115,18 +116,45 @@
             android:id="@+id/music_last"
             android:layout_width="56dp"
             android:layout_height="33dp"
-            android:layout_marginTop="26dp"
-            android:layout_toEndOf="@+id/music_bottom_song"
+            android:layout_marginStart="220dp"
+            android:layout_marginTop="16dp"
+            android:layout_alignTop="@+id/music_bottom_icon"
             android:src="@mipmap/music_last" />
 
         <ImageView
             android:id="@+id/music_mode"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+            android:layout_width="51dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="-3dp"
             android:layout_toEndOf="@+id/music_bottom_next"
             android:src="@mipmap/music_random" />
+
+        <TextView
+            android:id="@+id/currentTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_alignTop="@id/music_bottom_singer"
+            android:layout_toEndOf="@+id/music_bottom_singer"
+            android:text="3:30" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/currentTime"
+            android:layout_toEndOf="@+id/currentTime"
+            android:id="@+id/xie"
+            android:text="/"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/xie"
+            android:layout_toEndOf="@+id/xie"
+            android:id="@+id/total_time"
+            android:text="3:30"/>
+
 
         <SeekBar
             android:id="@+id/music_seekBar"
@@ -139,13 +167,13 @@
     </RelativeLayout>
 
 </RelativeLayout>
-
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+
         app:headerLayout="@layout/menu_header"
         app:menu="@menu/navigation" />
 
@@ -154,6 +182,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
+
 
 
 </androidx.drawerlayout.widget.DrawerLayout>
