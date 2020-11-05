@@ -361,12 +361,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.music_bottom_next:
-                if (currentId==musicDataSize-1) {
-                    Toast.makeText(this,"没有下一首了嗷~",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                currentId=currentId+1;
-                playMusicOnService(currentId);
+                myBinder.play_next();
+                songTV.setText(myBinder.getMusicSong());
+                singerTV.setText(myBinder.getMusicSinger());
+                currentId=myBinder.getMusicId();
                 break;
             case R.id.music_play:
                 if(currentId==-1){
@@ -392,6 +390,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 currentId = currentId-1;
                 playMusicOnService(currentId);
+                songTV.setText(myBinder.getMusicSong());
+                singerTV.setText(myBinder.getMusicSinger());
+                currentId=myBinder.getMusicId();
                 break;
         }
 

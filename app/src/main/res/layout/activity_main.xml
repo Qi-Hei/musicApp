@@ -116,7 +116,7 @@
             android:id="@+id/music_last"
             android:layout_width="56dp"
             android:layout_height="33dp"
-            android:layout_marginStart="220dp"
+            android:layout_marginStart="200dp"
             android:layout_marginTop="16dp"
             android:layout_alignTop="@+id/music_bottom_icon"
             android:src="@mipmap/music_last" />
