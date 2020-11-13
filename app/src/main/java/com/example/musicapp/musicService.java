@@ -93,17 +93,6 @@ public class musicService extends Service {
                 //设置信息
                 path = musicBean.getPath();
                 mediaPlayer.setDataSource(path);
-                music_song = musicBean.getSong();
-                music_singer = musicBean.getSinger();
-                music_duration = (int)musicBean.getDuration();
-                //调用意图服务，更新activity内容
-                Intent intentInfo = new Intent("com.example.musicApp.intentService");
-                intentInfo.setPackage(getPackageName());
-                intentInfo.putExtra("music_id", music_Id);
-                intentInfo.putExtra("music_song", music_song);
-                intentInfo.putExtra("music_singer", music_singer);
-                intentInfo.putExtra("music_duration", music_duration);
-                startService(intentInfo);
                 myBinder.playMusic();
             } catch (IOException e) {
                 e.printStackTrace();

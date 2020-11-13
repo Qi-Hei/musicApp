@@ -415,11 +415,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.music_last:
-                if (currentId==0) {
-                    Toast.makeText(this,"已经是第一首了嗷~",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                currentId = currentId-1;
+                myBinder.play_last();
                 playMusicOnService(currentId);
                 songTV.setText(myBinder.getMusicSong());
                 singerTV.setText(myBinder.getMusicSinger());
