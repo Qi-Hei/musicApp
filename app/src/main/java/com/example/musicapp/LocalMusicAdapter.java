@@ -68,7 +68,7 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<LocalMusicAdapter.Lo
         return mDatas.size();
     }
 
-    class LocalMusicViewHolder extends RecyclerView.ViewHolder{
+    static class LocalMusicViewHolder extends RecyclerView.ViewHolder{
         TextView idTv,songTv,singerTv,albumTv,timeTv;
         public LocalMusicViewHolder(View itemView) {
             super(itemView);

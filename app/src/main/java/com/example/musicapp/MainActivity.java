@@ -344,7 +344,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         musicAdapter = new LocalMusicAdapter(this, SetData);
         musicRV.setAdapter(musicAdapter);
         //设置布局管理器
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                      this,LinearLayoutManager.VERTICAL,false);
         musicRV.setLayoutManager(layoutManager);
     }
 
