@@ -8,10 +8,13 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:fitsSystemWindows="true"
-    android:background="@color/colorPink"
+    android:background="@color/mediumseagreen"
     tools:openDrawer="start"
+
     >
+
 <RelativeLayout
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -19,7 +22,7 @@
         android:id="@+id/menu_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPink1"
+        android:background="@color/lightskyblue"
         app:titleTextColor="@android:color/black">
 
         <ImageView
@@ -58,7 +61,7 @@
         android:id="@+id/music_bottom"
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:background="@color/colorPink1"
+        android:background="@color/darkturquoise"
         android:layout_alignParentBottom="true">
         <ImageView
             android:layout_width="match_parent"
@@ -173,10 +176,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-
         app:headerLayout="@layout/menu_header"
         app:menu="@menu/navigation" />
-
-
 
 </androidx.drawerlayout.widget.DrawerLayout>

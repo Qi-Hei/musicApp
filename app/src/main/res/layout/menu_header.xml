@@ -17,4 +17,5 @@
         android:textSize="18dp"
         android:textColor="#FFF"
         android:text="Easy Music"/>
+
 </LinearLayout>
